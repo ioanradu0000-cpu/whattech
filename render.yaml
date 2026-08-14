@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: whattech-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: whattech-db
+          property: connectionString
+      - key: DATABASE_SSL
+        value: "false"
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: SAFETY_ID_SALT
+        generateValue: true
+
+databases:
+  - name: whattech-db
+    plan: free
+    databaseName: whattech
+    user: whattech
+    ipAllowList: []

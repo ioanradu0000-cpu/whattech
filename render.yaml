@@ -3,6 +3,7 @@ services:
     name: whattech-api
     runtime: node
     plan: free
+    region: frankfurt
     rootDir: backend
     buildCommand: npm ci --omit=dev
     startCommand: npm start
@@ -22,6 +23,7 @@ services:
 databases:
   - name: whattech-db
     plan: free
+    region: frankfurt
     databaseName: whattech
     user: whattech
     ipAllowList: []

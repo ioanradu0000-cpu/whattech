@@ -63,6 +63,8 @@ For local development, copy `backend/.env.example` to `backend/.env`, run `npm i
 
 The API uses parameterized PostgreSQL queries, input constraints, a honeypot, rate limits, strict CORS, security headers, a bounded connection pool, and indexed forum queries. Visitors currently post using a display name; their questions and responses are persisted for everyone.
 
+New questions and responses receive a private deletion token that is saved only in the creator's browser. The database stores a one-way hash of that token, and the API requires the token before deleting content. Because the forum does not require accounts, deletion access does not transfer to another browser and cannot be restored after local browser storage is cleared.
+
 ## Quality checks
 
 ```bash

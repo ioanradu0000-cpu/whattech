@@ -7,8 +7,7 @@ export function Layout() {
   const location=useLocation()
 
   useEffect(()=>{
-    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    window.scrollTo({top:0,behavior:reducedMotion?'auto':'smooth'})
+    window.scrollTo({top:0,behavior:'auto'})
   },[location.pathname])
   function closeMenu(){setOpen(false)}
 
@@ -34,7 +33,7 @@ export function Layout() {
         <div><b>Tools</b><Link to="/tools">All tools</Link><Link to="/tools/will-it-work">Compatibility</Link><Link to="/tools/fix-my-device">Troubleshooting</Link></div>
         <div><b>Explore</b><Link to="/devices">Device database</Link><Link to="/forum">Community forum</Link><Link to="/tools/compare">Compare</Link><Link to="/about">How it works</Link></div>
       </div>
-      <div className="footerBottom"><span>© {new Date().getFullYear()} WhatTech</span><span>Verified data. Clear uncertainty. Useful decisions.</span></div>
+      <div className="footerBottom"><span>© {new Date().getFullYear()} WhatTech</span><span>As an Amazon Associate I earn from qualifying purchases.</span><span>Verified data. Clear uncertainty. Useful decisions.</span></div>
     </footer>
   </div>
 }

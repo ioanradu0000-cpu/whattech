@@ -19,10 +19,18 @@ export async function getForumPost(postId:string):Promise<{post?:ForumPost}>{
   return request<{post?:ForumPost}>(`/api/forum?id=${encodeURIComponent(postId)}`)
 }
 
-export async function createForumPost(input:NewForumPost):Promise<{post:ForumPost}>{
+export async function createForumPost(input:NewForumPost):Promise<{post:ForumPost;ownerToken:string}>{
   return request('/api/forum',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create-post',...input})})
 }
 
-export async function createForumReply(input:NewForumReply):Promise<{post:ForumPost}>{
+export async function createForumReply(input:NewForumReply):Promise<{post:ForumPost;replyId:string;ownerToken:string}>{
   return request('/api/forum',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create-reply',...input})})
+}
+
+export async function deleteForumPost(postId:string,ownerToken:string):Promise<{deletedId:string}>{
+  return request(`/api/forum/posts/${encodeURIComponent(postId)}`,{method:'DELETE',headers:{Authorization:`Bearer ${ownerToken}`}})
+}
+
+export async function deleteForumReply(replyId:string,ownerToken:string):Promise<{post:ForumPost}>{
+  return request(`/api/forum/replies/${encodeURIComponent(replyId)}`,{method:'DELETE',headers:{Authorization:`Bearer ${ownerToken}`}})
 }

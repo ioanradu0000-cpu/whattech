@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, Check, CircleHelp, Plug, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
+import { AffiliateLink } from '../components/AffiliateLink'
 import { DeviceSelector } from '../components/DeviceSelector'
 import { Seo } from '../components/Seo'
 import { StatusIcon } from '../components/Status'
@@ -33,7 +34,7 @@ function CompatibilityResultView({first,second,result,reset}:{first:Device;secon
     <div className="resultLedger">
       <ResultSection icon={<Check/>} title="What works" items={result.works}/>
       <ResultSection icon={<ArrowRight/>} title="Maximum capabilities" items={[first.maxInputWatts?`${first.model}: up to ${first.maxInputWatts}W input`:first.display?`${first.display.maxResolution} at up to ${first.display.maxRefreshHz}Hz`:'No verified maximum recorded',second.maxOutputWatts?`${second.model}: up to ${second.maxOutputWatts}W output`:second.display?`${second.display.maxResolution} at up to ${second.display.maxRefreshHz}Hz`:'No verified maximum recorded']}/>
-      <ResultSection icon={<Plug/>} title="Requirements" items={result.requiredAdapters.length?result.requiredAdapters:['Use the verified shared connector and protocol shown above.']}/>
+      <ResultSection icon={<Plug/>} title="Requirements" items={result.requiredAdapters.length?result.requiredAdapters:['Use the verified shared connector and protocol shown above.']} affiliateContext={`${first.brand} ${first.model} ${second.brand} ${second.model}`}/>
       <ResultSection icon={<AlertTriangle/>} title="Potential issues" items={result.limitations}/>
       <ResultSection icon={<ShieldCheck/>} title="Safety" items={result.safety}/>
       <ResultSection icon={<CircleHelp/>} title="Recommended alternatives" items={result.status==='compatible'?['No alternative is necessary for the stated job.']:['Choose a product with the shared ports and protocols listed in the analysis.']}/>
@@ -42,4 +43,4 @@ function CompatibilityResultView({first,second,result,reset}:{first:Device;secon
   </section>
 }
 
-function ResultSection({icon,title,items}:{icon:React.ReactNode;title:string;items:string[]}){return <div>{icon}<h3>{title}</h3>{items.length?<ul>{items.map(item=><li key={item}>{item}</li>)}</ul>:<p>No verified information available.</p>}</div>}
+function ResultSection({icon,title,items,affiliateContext}:{icon:React.ReactNode;title:string;items:string[];affiliateContext?:string}){return <div className={affiliateContext?'affiliateRequirements':undefined}>{icon}<h3>{title}</h3>{items.length?<ul>{items.map(item=><li key={item}><span>{item}</span>{affiliateContext?<AffiliateLink query={`${affiliateContext} ${item}`} label="Find a match" compact/>:null}</li>)}</ul>:<p>No verified information available.</p>}</div>}

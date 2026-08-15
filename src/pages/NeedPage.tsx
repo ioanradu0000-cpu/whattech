@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowDown, ArrowRight, Cable, Check, HardDrive, Headphones, Monitor, Plug, Save } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { AffiliateLink } from '../components/AffiliateLink'
 import { DeviceSelector } from '../components/DeviceSelector'
 import { Seo } from '../components/Seo'
 import { ToolPageHeader } from '../components/ToolPageHeader'
@@ -18,6 +19,7 @@ export function NeedPage() {
   const [show,setShow]=useState(false)
   const destinationCategories=useMemo(()=>goal.includes('speakers')?['audio']:goal.includes('storage')?['storage']:['monitor','tv'],[goal])
   const plan=source&&destination?connectionPlan(source,destination,goal):null
+  const purchaseItems=source&&plan?purchaseRequirements(plan,source):[]
   function chooseGoal(nextGoal:string){setGoal(nextGoal);const allowed=nextGoal.includes('speakers')?['audio']:nextGoal.includes('storage')?['storage']:['monitor','tv'];if(destination&&!allowed.includes(destination.category))setDestination(undefined)}
 
   return <main className="flowPage">
@@ -28,10 +30,21 @@ export function NeedPage() {
       <h2>Your best connection path</h2>
       <div className={`connectionChain ${plan.verified?'':'connectionUnknown'}`}><ChainNode icon={<span className={`deviceMark ${source.category}`}>{source.brand[0]}</span>} title={source.model}/><ArrowRight/><ChainNode icon={<Plug/>} title={plan.path}/>{plan.needsDock?<><ArrowRight/><ChainNode icon={<Cable/>} title={plan.dockLabel}/></>:null}<ArrowRight/><ChainNode icon={<Cable/>} title={`${plan.quantity} × certified cable${plan.quantity>1?'s':''}`}/><ArrowRight/><ChainNode icon={destination.category==='audio'?<Headphones/>:destination.category==='storage'?<HardDrive/>:<Monitor/>} title={destination.model}/></div>
       <div className="engineReasoning"><h3>{plan.confidence} confidence plan</h3>{plan.steps.map((step,index)=><p key={step}><span>{index+1}</span>{step}</p>)}<small><b>Alternative:</b> {plan.alternative}</small></div>
-      <div className="needDetails"><div><h3>{plan.verified?'You need':'No verified direct path'}</h3>{plan.verified?<><p><Check/>{plan.needsDock?plan.dockLabel:plan.needsAdapter?`A certified ${plan.path}`:`A certified ${plan.path}`}</p><p><Check/>{plan.quantity} correctly rated cable{plan.quantity>1?'s':''}</p><p><Check/>The original or correctly rated source-device power adapter</p></>:<p><AlertTriangle/>Choose a verified active adapter or dock that converts the source output to one of the destination inputs.</p>}</div><div><h3>Limits and checks</h3>{plan.warnings.map(warning=><p key={warning}>{warning}</p>)}</div></div>
+      <div className="needDetails"><div><h3>{plan.verified?'You need':'No verified direct path'}</h3>{purchaseItems.map(item=><div className="purchaseRequirement" key={item.label}><p>{plan.verified?<Check/>:<AlertTriangle/>}{item.label}</p><AffiliateLink query={item.query} label="Find a matching product" compact/></div>)}</div><div><h3>Limits and checks</h3>{plan.warnings.map(warning=><p key={warning}>{warning}</p>)}</div></div>
       <button className="secondaryAction" onClick={()=>setShow(false)}><Save/>Adjust setup</button>
     </section>:null}
   </main>
 }
 
 function ChainNode({icon,title}:{icon:React.ReactNode;title:string}) { return <div>{icon}<b>{title}</b><ArrowDown/></div> }
+
+function purchaseRequirements(plan:ReturnType<typeof connectionPlan>,source:Device){
+  const items:Array<{label:string;query:string}>=[]
+  if(!plan.verified)return [{label:'A verified active adapter or dock matching both connection types',query:`active adapter dock ${plan.path} ${source.brand} ${source.model}`}]
+  if(plan.needsDock)items.push({label:plan.dockLabel,query:`${source.brand} ${source.model} ${plan.dockLabel}`})
+  else if(plan.needsAdapter)items.push({label:`A certified ${plan.path}`,query:`certified ${plan.path} ${source.brand} ${source.model}`})
+  else if(!/bluetooth/i.test(plan.path))items.push({label:`${plan.quantity} × certified ${plan.path}${plan.quantity>1?'s':''}`,query:`certified ${plan.path}`})
+  if(plan.needsDock)items.push({label:`${plan.quantity} × correctly rated display cable${plan.quantity>1?'s':''}`,query:`certified HDMI DisplayPort cable for ${plan.dockLabel}`})
+  items.push({label:'The original or correctly rated source-device power adapter',query:`${source.brand} ${source.model} charger power adapter`})
+  return items
+}

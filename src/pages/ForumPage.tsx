@@ -1,4 +1,4 @@
-import { CheckCircle2, ChevronRight, CircleDot, Eye, Info, ListFilter, MessageCircle, MessageSquarePlus, Search, ShieldCheck, Users } from 'lucide-react'
+import { CheckCircle2, ChevronRight, CircleDot, Eye, Info, ListFilter, MessageCircle, MessageSquarePlus, Search, ShieldCheck, SlidersHorizontal, Users } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ForumDeviceInput } from '../components/ForumDeviceInput'
@@ -25,6 +25,7 @@ export function ForumPage(){
   const [posts,setPosts]=useState<ForumPost[]>([])
   const [loading,setLoading]=useState(true);const [error,setError]=useState('');const [asking,setAsking]=useState(false)
   const [query,setQuery]=useState('');const [device,setDevice]=useState<Device>();const [topic,setTopic]=useState<'all'|ForumTopic>('all');const [status,setStatus]=useState<'all'|ForumStatus>('all');const [sort,setSort]=useState<SortMode>('activity')
+  const [filtersOpen,setFiltersOpen]=useState(false)
   const searchInput=useRef<HTMLInputElement>(null)
   const closeForm=useCallback(()=>setAsking(false),[])
 
@@ -38,15 +39,18 @@ export function ForumPage(){
   },[device,posts,query,sort,status,topic])
   const popularDevices=useMemo(()=>Object.values(posts.reduce<Record<string,{device:ForumPost['device'];count:number}>>((items,post)=>{items[post.device.id]??={device:post.device,count:0};items[post.device.id].count++;return items},{})).sort((a,b)=>b.count-a.count).slice(0,5),[posts])
   const activeFilters=Boolean(query||device||topic!=='all'||status!=='all')
+  const activeFilterCount=Number(Boolean(device))+Number(topic!=='all')+Number(status!=='all')
   function clearFilters(){setQuery('');setDevice(undefined);setTopic('all');setStatus('all')}
 
   return <main className="forumPage">
     <Seo title="Community Forum" description="Ask device-specific technology questions, browse answers, and filter community discussions by device."/>
     <header className="forumHero"><div><h1>Community Forum</h1><p>Ask about your device. Learn from people who use it.</p></div><button className="actionButton forumAskButton" onClick={()=>setAsking(true)}><MessageSquarePlus/>Ask a question</button></header>
     <label className="forumSearch"><Search/><input ref={searchInput} value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search questions, symptoms, or device names" aria-label="Search forum discussions"/><kbd>/</kbd></label>
+    <button type="button" className="mobileForumFilterToggle" aria-expanded={filtersOpen} aria-controls="forum-filters" onClick={()=>setFiltersOpen(value=>!value)}><SlidersHorizontal/><span>{filtersOpen?'Hide filters':'Filter discussions'}</span>{activeFilterCount?<b>{activeFilterCount}</b>:null}</button>
     <section className="forumWorkspace">
       <div className="forumMain">
-        <div className="forumFilters">
+        <div className={filtersOpen?'forumFilters mobileOpen':'forumFilters'} id="forum-filters">
+          <div className="mobileForumDeviceFilter"><ForumDeviceInput devices={devices} value={device} onChange={setDevice} label="Device"/></div>
           <label><span>Category</span><select value={topic} onChange={event=>setTopic(event.target.value as 'all'|ForumTopic)}><option value="all">All categories</option>{forumTopics.map(item=><option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
           <label><span>Status</span><select value={status} onChange={event=>setStatus(event.target.value as 'all'|ForumStatus)}><option value="all">All statuses</option><option value="open">Open</option><option value="solved">Solved</option></select></label>
           <label><span>Sort</span><select value={sort} onChange={event=>setSort(event.target.value as SortMode)}><option value="activity">Latest activity</option><option value="newest">Newest questions</option><option value="replies">Most responses</option></select></label>

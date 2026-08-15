@@ -14,7 +14,7 @@ export function createApp(){
   app.use(cors({origin(origin,callback){
     if(!origin||origins.has(origin.replace(/\/$/,'')))return callback(null,true)
     return callback(new Error('Origin is not allowed.'))
-  },methods:['GET','POST','OPTIONS'],allowedHeaders:['Content-Type'],maxAge:86_400}))
+  },methods:['GET','POST','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization'],maxAge:86_400}))
   app.use(express.json({limit:'60kb'}))
   app.get('/health',(_request,response)=>response.json({status:'ok'}))
   app.use('/api/forum',forumRouter)
@@ -28,4 +28,3 @@ export function createApp(){
   })
   return app
 }
-

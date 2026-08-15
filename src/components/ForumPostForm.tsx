@@ -1,6 +1,7 @@
 import { Info, MessageSquarePlus, X } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { createForumPost } from '../services/forum'
+import { saveForumOwnership } from '../services/forumOwnership'
 import { forumTopics } from '../data/forumTopics'
 import type { Device } from '../types/device'
 import type { ForumPost, ForumTopic } from '../types/forum'
@@ -31,6 +32,7 @@ export function ForumPostForm({devices,onClose,onCreated}:{devices:Device[];onCl
     setSubmitting(true)
     try{
       const result=await createForumPost({authorName,title,body,topic,website,device:{id:device.id,brand:device.brand,model:device.model,category:device.category}})
+      saveForumOwnership('post',result.post.id,result.ownerToken)
       onCreated(result.post)
     }catch(caught){setError(caught instanceof Error?caught.message:'Your question could not be posted.');setSubmitting(false)}
   }
@@ -45,7 +47,7 @@ export function ForumPostForm({devices,onClose,onCreated}:{devices:Device[];onCl
         <label className="forumField"><span>Question title</span><input required minLength={10} value={title} onChange={event=>setTitle(event.target.value)} placeholder="Summarize the problem in a few words" maxLength={140}/><small>{title.length}/140</small></label>
         <label className="forumField"><span>Detailed question</span><textarea required minLength={30} value={body} onChange={event=>setBody(event.target.value)} placeholder="What happens? When did it start? What have you already tried?" rows={8} maxLength={5000}/><small>{body.length}/5000</small></label>
         <label className="forumHoney" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={website} onChange={event=>setWebsite(event.target.value)}/></label>
-        <div className="forumPostingGuide"><Info/><div><b>Help others help you</b><p>Include exact symptoms, relevant settings, and steps already tried. Leave out serial numbers and personal information.</p></div></div>
+        <div className="forumPostingGuide"><Info/><div><b>Help others help you</b><p>Include exact symptoms, relevant settings, and steps already tried. Leave out serial numbers and personal information. You can delete your question later from this browser.</p></div></div>
         {error?<p className="forumFormError" role="alert">{error}</p>:null}
         <footer><button type="button" className="secondaryAction" onClick={onClose}>Cancel</button><button className="actionButton" disabled={submitting}>{submitting?'Posting…':'Post question'}</button></footer>
       </form>

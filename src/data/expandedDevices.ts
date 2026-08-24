@@ -1,4 +1,4 @@
-import type { Device, DeviceCategory } from '../types/device'
+import type { Device, DeviceCategory } from '../types/device.ts'
 
 type Scores = Record<string, number>
 type Power = { input?: number; output?: number }

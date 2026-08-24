@@ -1,4 +1,4 @@
-import type { Device, DeviceCategory } from '../types/device'
+import type { Device, DeviceCategory } from '../types/device.ts'
 
 type CableRow=[brand:string,model:string,subcategory:string,ports:string[],protocols:string[],year:number,value:[number,number],power?:number,display?:Device['display']]
 type DeviceRow=[brand:string,model:string,category:DeviceCategory,subcategory:string,year:number,value:[number,number],ports:string[],protocols:string[],power?:number,display?:Device['display']]

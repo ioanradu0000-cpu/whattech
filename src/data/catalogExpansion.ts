@@ -1,4 +1,4 @@
-import type { Device, DeviceCategory } from '../types/device'
+import type { Device, DeviceCategory } from '../types/device.ts'
 
 type Scores=Record<string,number>
 type CompactRow=[brand:string,model:string,category:DeviceCategory,year:number,value:[number,number],ports:string[],protocols:string[],subcategory?:string,scores?:Scores,input?:number,output?:number,display?:Device['display']]

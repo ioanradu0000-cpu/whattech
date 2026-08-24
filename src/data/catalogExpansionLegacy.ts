@@ -1,4 +1,4 @@
-import type { Device, DeviceCategory } from '../types/device'
+import type { Device, DeviceCategory } from '../types/device.ts'
 
 type ModelRow=[model:string,year:number,low:number,high:number]
 type Family={brand:string;category:DeviceCategory;subcategory?:string;ports:string[];protocols:string[];models:ModelRow[];input?:number;output?:number;display?:Device['display']}

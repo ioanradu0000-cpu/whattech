@@ -1,9 +1,9 @@
-import type { Device } from '../types/device'
-import { catalogBatch2026 } from './catalogBatch2026'
-import { catalogExpansion } from './catalogExpansion'
-import { catalogExpansionLegacy } from './catalogExpansionLegacy'
-import { connectionCatalog } from './catalogConnections'
-import { expandedDevices } from './expandedDevices'
+import type { Device } from '../types/device.ts'
+import { catalogBatch2026 } from './catalogBatch2026.ts'
+import { catalogExpansion } from './catalogExpansion.ts'
+import { catalogExpansionLegacy } from './catalogExpansionLegacy.ts'
+import { connectionCatalog } from './catalogConnections.ts'
+import { expandedDevices } from './expandedDevices.ts'
 
 const allDevices: Device[] = [
   { id:'samsung-galaxy-s25', brand:'Samsung', model:'Galaxy S25', category:'phone', releaseYear:2025, aliases:['S25','Galaxy S25'], ports:['USB-C'], protocols:['USB PD','PPS','Qi2 Ready','Bluetooth 5.4','Wi-Fi 7'], maxInputWatts:45, estimatedValueEur:[520,650], estimatedLifespanYears:6, repairability:'professional', softwareSupportUntil:2032, source:'Samsung official specifications', updatedAt:'2026-08-01', confidence:'high' },

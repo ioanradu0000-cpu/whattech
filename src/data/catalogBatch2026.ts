@@ -1,4 +1,4 @@
-import type { Device } from '../types/device'
+import type { Device } from '../types/device.ts'
 
 type Scores=Record<string,number>
 type PhoneRow=[brand:string,model:string,year:number,value:[number,number],input:number,protocols:string[],scores:Scores,support:number|undefined,source:string]

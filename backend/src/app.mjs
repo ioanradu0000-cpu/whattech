@@ -1,6 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
+import { affiliateRouter } from './affiliate.mjs'
 import { forumRouter } from './forum.mjs'
 
 function allowedOrigins(){return new Set((process.env.FRONTEND_ORIGINS||'http://localhost:5173').split(',').map(value=>value.trim().replace(/\/$/,'')).filter(Boolean))}
@@ -14,9 +15,10 @@ export function createApp(){
   app.use(cors({origin(origin,callback){
     if(!origin||origins.has(origin.replace(/\/$/,'')))return callback(null,true)
     return callback(new Error('Origin is not allowed.'))
-  },methods:['GET','POST','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization'],maxAge:86_400}))
+  },methods:['GET','POST','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization','X-Analytics-Key'],maxAge:86_400}))
   app.use(express.json({limit:'60kb'}))
   app.get('/health',(_request,response)=>response.json({status:'ok'}))
+  app.use('/api/affiliate',affiliateRouter)
   app.use('/api/forum',forumRouter)
   app.use((_request,response)=>response.status(404).json({error:'Endpoint not found.'}))
   app.use((error,_request,response,_next)=>{

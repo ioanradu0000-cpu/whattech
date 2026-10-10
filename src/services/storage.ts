@@ -8,6 +8,7 @@ const REQUESTS_KEY = 'whattech.missing-products.v1'
 const safeId = (device: Device) => `${device.brand}-${device.model}`.toLowerCase().replace(/\+/g,' plus ').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
 
 export function getDevices(): Device[] {
+  if (typeof localStorage === 'undefined') return seedDevices
   try {
     const stored = localStorage.getItem(DEVICES_KEY)
     if (stored) return JSON.parse(stored) as Device[]
@@ -40,5 +41,6 @@ export function requestMissingProduct(query: string) {
 }
 
 export function getMissingProducts(): Array<{query:string;createdAt:string}> {
+  if (typeof localStorage === 'undefined') return []
   try { return JSON.parse(localStorage.getItem(REQUESTS_KEY) || '[]') } catch { return [] }
 }

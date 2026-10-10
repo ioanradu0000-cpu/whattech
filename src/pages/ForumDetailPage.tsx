@@ -55,7 +55,7 @@ export function ForumDetailPage(){
     finally{setDeleting('')}
   }
 
-  if(loading)return <main className="forumDetailPage"><div className="forumEmpty"><div className="forumLoader"/><h1>Loading question…</h1></div></main>
+  if(loading)return <main className="forumDetailPage"><Seo title="Loading community question" description="Loading a device question from the WhatTech community forum." canonical={false}/><div className="forumEmpty"><div className="forumLoader"/><h1>Loading question…</h1></div></main>
   if(!post)return <main className="forumDetailPage"><Seo title="Question unavailable" description="This forum question could not be loaded."/><div className="forumEmpty" role="alert"><Info/><h1>Question unavailable</h1><p>{error||'It may have been removed or the link is incorrect.'}</p><div className="forumEmptyActions"><button type="button" className="secondaryAction" onClick={()=>void loadPost()}>Try again</button><Link className="secondaryAction" to="/forum"><ArrowLeft/>Back to forum</Link></div></div></main>
 
   const postOwnerToken=getForumOwnership('post',post.id)

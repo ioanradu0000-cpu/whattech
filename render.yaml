@@ -19,6 +19,8 @@ services:
         sync: false
       - key: SAFETY_ID_SALT
         generateValue: true
+      - key: ADMIN_ANALYTICS_KEY
+        generateValue: true
 
 databases:
   - name: whattech-db

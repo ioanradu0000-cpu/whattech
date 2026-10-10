@@ -7,8 +7,10 @@
     "dev": "vite",
     "dev:backend": "npm --prefix backend run dev",
     "migrate:backend": "npm --prefix backend run migrate",
-    "build": "tsc -b && vite build",
+    "affiliate:stats": "node scripts/affiliate-stats.mjs",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "lint": "eslint .",
+    "verify:prerender": "node scripts/verify-prerender.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,1 +1,27 @@
-{"functions":{"api/research.mjs":{"maxDuration":60},"api/forum-sitemap.mjs":{"maxDuration":60}},"rewrites":[{"source":"/forum-sitemap.xml","destination":"/api/forum-sitemap"},{"source":"/((?!api/).*)","destination":"/index.html"}],"headers":[{"source":"/assets/(.*)","headers":[{"key":"Cache-Control","value":"public, max-age=31536000, immutable"}]}]}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "functions": {
+    "api/research.mjs": { "maxDuration": 60 },
+    "api/forum-sitemap.mjs": { "maxDuration": 60 }
+  },
+  "redirects": [
+    { "source": "/compatibility", "destination": "/tools/will-it-work", "permanent": true },
+    { "source": "/diagnose", "destination": "/tools/fix-my-device", "permanent": true },
+    { "source": "/decision", "destination": "/tools/repair-or-replace", "permanent": true },
+    { "source": "/compare", "destination": "/tools/compare", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/forum-sitemap.xml", "destination": "/api/forum-sitemap" },
+    { "source": "/forum/:postId", "destination": "/forum-question" },
+    { "source": "/admin", "destination": "/app-shell" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

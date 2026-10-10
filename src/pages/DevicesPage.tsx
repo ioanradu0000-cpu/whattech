@@ -3,16 +3,12 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { categories, categoryById } from '../data/catalog'
+import { devicePath } from '../data/staticRoutes'
 import { useDevices } from '../hooks/useDevices'
 import { searchDevices } from '../services/search'
-import type { Device, DeviceCategory } from '../types/device'
+import type { DeviceCategory } from '../types/device'
 
 const INITIAL_RESULTS=30
-
-function deviceRoute(device:Device){
-  const brand=device.brand.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')
-  return `/devices/${brand}/${device.id}`
-}
 
 export function DevicesPage(){
   const devices=useDevices()
@@ -49,7 +45,7 @@ export function DevicesPage(){
       <div className="catalogResults">
         <div className="catalogToolbar"><div><h2>{category?categoryById.get(category)?.label:'All devices'}</h2><span>{results.length} {results.length===1?'device':'devices'}</span></div><div className="catalogFilters"><label><SlidersHorizontal/><span>Category</span><select value={category} onChange={event=>updateFilter({category:event.target.value,brand:''})}><option value="">All categories</option>{categories.map(item=><option value={item.id} key={item.id}>{item.label}</option>)}</select></label><label><span>Brand</span><select value={brand} onChange={event=>updateFilter({brand:event.target.value})}><option value="">All brands</option>{brands.map(item=><option key={item}>{item}</option>)}</select></label><label><span>Sort</span><select value={sort} onChange={event=>{setSort(event.target.value);setVisibleCount(INITIAL_RESULTS)}}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option></select></label>{query||category||brand?<button className="clearFilters" onClick={clearFilters}><X/>Clear filters</button>:null}</div></div>
         <div className="catalogTableHead"><span>Device</span><span>Category</span><span>Year</span><span>Ports</span><span>Confidence</span><i/></div>
-        <div className="catalogModels">{results.slice(0,visibleCount).map(device=><Link to={deviceRoute(device)} key={device.id}><span className={`deviceMark ${device.category}`}>{device.brand[0]}</span><div className="catalogDeviceName"><small>{device.subcategory||categoryById.get(device.category)?.label}</small><h2>{device.brand} {device.model}</h2><p>{device.ports.slice(0,3).join(' · ')||'See device details'}</p></div><span className="catalogCell">{categoryById.get(device.category)?.shortLabel}</span><span className="catalogCell">{device.releaseYear}</span><span className="catalogCell">{device.ports.slice(0,3).join(', ')||'—'}</span><span className={`catalogConfidence ${device.confidence}`}>{device.confidence}</span><ChevronRight/></Link>)}</div>
+        <div className="catalogModels">{results.slice(0,visibleCount).map(device=><Link to={devicePath(device)} key={device.id}><span className={`deviceMark ${device.category}`}>{device.brand[0]}</span><div className="catalogDeviceName"><small>{device.subcategory||categoryById.get(device.category)?.label}</small><h2>{device.brand} {device.model}</h2><p>{device.ports.slice(0,3).join(' · ')||'See device details'}</p></div><span className="catalogCell">{categoryById.get(device.category)?.shortLabel}</span><span className="catalogCell">{device.releaseYear}</span><span className="catalogCell">{device.ports.slice(0,3).join(', ')||'—'}</span><span className={`catalogConfidence ${device.confidence}`}>{device.confidence}</span><ChevronRight/></Link>)}</div>
         {!results.length?<div className="catalogEmpty"><Search/><h2>No matching devices</h2><p>Try a shorter model name, remove a filter, or browse another category.</p><button onClick={clearFilters}>Clear all filters</button></div>:null}
         {visibleCount<results.length?<button className="loadMoreDevices" onClick={()=>setVisibleCount(count=>count+INITIAL_RESULTS)}>Show {Math.min(INITIAL_RESULTS,results.length-visibleCount)} more devices</button>:null}
         <div className="catalogRequest"><span>Can’t find your device?</span><Link to="/tools/fix-my-device">Search it inside a tool or request it</Link></div>

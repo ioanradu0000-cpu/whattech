@@ -2,6 +2,7 @@ import { ArrowRight, Search } from 'lucide-react'
 import { FormEvent, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { SmoothCutFeature } from '../components/SmoothCutFeature'
 import { tools } from '../data/tools'
 import { useDevices } from '../hooks/useDevices'
 import { interpretSearch } from '../services/searchIntent'
@@ -23,6 +24,7 @@ export function HomePage(){
     </section>
 
     <section className="simpleHomeBody">
+      <SmoothCutFeature/>
       <section className="homeToolsDirectory" aria-labelledby="home-tools-title">
         <header>
           <div><h2 id="home-tools-title">Choose what you need to do</h2><p>Every tool asks focused questions and gives you a practical next step.</p></div>

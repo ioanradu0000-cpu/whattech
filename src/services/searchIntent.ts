@@ -1,4 +1,5 @@
 import type { Device } from '../types/device'
+import { devicePath } from '../data/staticRoutes'
 
 export type SearchIntent = {
   route: string
@@ -83,11 +84,6 @@ function withDevices(route: string, devices: Device[], issue?: string) {
   return query ? `${route}?${query}` : route
 }
 
-function devicePageRoute(device: Device) {
-  const brand = device.brand.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  return `/devices/${brand}/${device.id}`
-}
-
 export function interpretSearch(devices: Device[], query: string): SearchIntent {
   const text = normalizedWords(query)
   const mentioned = devicesMentionedInQuery(devices, query)
@@ -104,15 +100,17 @@ export function interpretSearch(devices: Device[], query: string): SearchIntent 
   if (/\b(worth|value|sell|trade in|tradein)\b|how much/.test(text)) return { route: withDevices('/tools/whats-it-worth', selected), tool: 'What’s It Worth?', devices: selected }
   if (/\b(charger|cable|adapter|dock)\b|what do i need|connect .+ to|monitor setup/.test(text)) return { route: withDevices('/tools/what-do-i-need', selected), tool: 'What Do I Need?', devices: selected }
   if (/\b(buy|recommend|recommendation|best)\b|under [€$£]|what should i get/.test(text)) return { route: '/tools/what-should-i-buy', tool: 'What Should I Buy?', devices: selected }
-  if (selected[0]) return { route: devicePageRoute(selected[0]), tool: 'Device page', devices: selected }
+  if (selected[0]) return { route: devicePath(selected[0]), tool: 'Device page', devices: selected }
   return { route: `/devices?q=${encodeURIComponent(query.trim())}`, tool: 'Device search', devices: [] }
 }
 
 export function deviceFromSearch(devices: Device[], key: 'device' | 'second') {
-  const id = new URLSearchParams(window.location.search).get(key)
+  const search = typeof window === 'undefined' ? '' : window.location.search
+  const id = new URLSearchParams(search).get(key)
   return id ? devices.find(device => device.id === id) : undefined
 }
 
 export function valueFromSearch(key: string) {
-  return new URLSearchParams(window.location.search).get(key) || undefined
+  const search = typeof window === 'undefined' ? '' : window.location.search
+  return new URLSearchParams(search).get(key) || undefined
 }

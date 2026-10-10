@@ -3,23 +3,7 @@ import type { IncomingMessage } from 'node:http'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import researchHandler from './api/research.mjs'
 import { seedDevices } from './src/data/seedDevices.ts'
-
-const SITE_ORIGIN = 'https://www.askwhattech.com'
-const PUBLIC_ROUTES = [
-  '/',
-  '/tools',
-  '/tools/will-it-work',
-  '/tools/fix-my-device',
-  '/tools/should-i-upgrade',
-  '/tools/repair-or-replace',
-  '/tools/whats-it-worth',
-  '/tools/what-do-i-need',
-  '/tools/what-should-i-buy',
-  '/tools/compare',
-  '/devices',
-  '/forum',
-  '/about',
-] as const
+import { devicePath, PUBLIC_ROUTES, SITE_ORIGIN } from './src/data/staticRoutes.ts'
 
 function escapeXml(value: string) {
   return value.replace(/[<>&'"]/g, character => ({
@@ -31,14 +15,10 @@ function escapeXml(value: string) {
   })[character] ?? character)
 }
 
-function brandSlug(brand: string) {
-  return brand.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
-
 function staticSitemap() {
   const routeEntries = PUBLIC_ROUTES.map(path => `  <url><loc>${escapeXml(`${SITE_ORIGIN}${path}`)}</loc></url>`)
   const deviceEntries = seedDevices.map(device => {
-    const url = `${SITE_ORIGIN}/devices/${brandSlug(device.brand)}/${encodeURIComponent(device.id)}`
+    const url = `${SITE_ORIGIN}${devicePath(device)}`
     return `  <url><loc>${escapeXml(url)}</loc><lastmod>${escapeXml(device.updatedAt)}</lastmod></url>`
   })
 

@@ -65,6 +65,23 @@ The API uses parameterized PostgreSQL queries, input constraints, a honeypot, ra
 
 New questions and responses receive a private deletion token that is saved only in the creator's browser. The database stores a one-way hash of that token, and the API requires the token before deleting content. Because the forum does not require accounts, deletion access does not transfer to another browser and cannot be restored after local browser storage is cleared.
 
+## SmoothCut affiliate feature and click tracking
+
+The homepage partner feature links to SmoothCut with `utm_source=askwhattech`, `utm_medium=affiliate`, and `utm_campaign=homepage_partner`. If SmoothCut issued a unique referral URL, add it in Vercel and redeploy:
+
+```text
+VITE_SMOOTHCUT_AFFILIATE_URL=https://smoothcut.studio/your-referral-link
+```
+
+Outbound clicks from the feature button and product artwork are recorded separately in PostgreSQL without storing visitor IP addresses. Render creates `ADMIN_ANALYTICS_KEY`; copy that value when you want to inspect totals locally:
+
+```powershell
+$env:ADMIN_ANALYTICS_KEY="paste-the-value-from-render"
+npm run affiliate:stats
+```
+
+If the API uses a different URL, also set `WHATTECH_API_URL` for that terminal session. The backend applies the affiliate migration automatically when the Render service starts.
+
 ## Quality checks
 
 ```bash

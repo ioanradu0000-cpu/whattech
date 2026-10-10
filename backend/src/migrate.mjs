@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { closeDatabase, pool } from './db.mjs'
 
-const migrationNames=['001_forum.sql','002_forum_ownership.sql']
+const migrationNames=['001_forum.sql','002_forum_ownership.sql','003_affiliate_clicks.sql']
 
 export async function migrate(){
   const client=await pool.connect()

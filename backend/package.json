@@ -5,7 +5,7 @@
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
-    "start": "node src/server.mjs",
+    "start": "node src/migrate.mjs && node src/server.mjs",
     "dev": "node --watch src/server.mjs",
     "migrate": "node src/migrate.mjs",
     "test": "node --test"

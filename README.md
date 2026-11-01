@@ -67,11 +67,7 @@ New questions and responses receive a private deletion token that is saved only 
 
 ## SmoothCut affiliate feature and click tracking
 
-The homepage partner feature links to SmoothCut with `utm_source=askwhattech`, `utm_medium=affiliate`, and `utm_campaign=homepage_partner`. If SmoothCut issued a unique referral URL, add it in Vercel and redeploy:
-
-```text
-VITE_SMOOTHCUT_AFFILIATE_URL=https://smoothcut.studio/your-referral-link
-```
+The homepage partner feature links through `https://smoothcut.studio/r/whattech` with `utm_source=askwhattech`, `utm_medium=affiliate`, and `utm_campaign=homepage_partner`.
 
 Outbound clicks from the feature button and product artwork are recorded separately in PostgreSQL without storing visitor IP addresses. Render creates `ADMIN_ANALYTICS_KEY`; copy that value when you want to inspect totals locally:
 

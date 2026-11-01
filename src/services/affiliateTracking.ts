@@ -4,16 +4,16 @@ export type AffiliatePlacement = 'homepage-feature-cta' | 'homepage-feature-medi
 
 const configuredApiBase=import.meta.env.VITE_API_URL?.trim().replace(/\/$/,'')
 const apiBase=configuredApiBase||(import.meta.env.DEV?'http://localhost:3001':'')
+const smoothCutReferralUrl='https://smoothcut.studio/r/whattech'
 
 function buildAffiliateUrl(){
-  const configured=import.meta.env.VITE_SMOOTHCUT_AFFILIATE_URL?.trim()
   try{
-    const url=new URL(configured||'https://smoothcut.studio/')
+    const url=new URL(smoothCutReferralUrl)
     if(!url.searchParams.has('utm_source'))url.searchParams.set('utm_source','askwhattech')
     if(!url.searchParams.has('utm_medium'))url.searchParams.set('utm_medium','affiliate')
     if(!url.searchParams.has('utm_campaign'))url.searchParams.set('utm_campaign','homepage_partner')
     return url.href
-  }catch{return 'https://smoothcut.studio/?utm_source=askwhattech&utm_medium=affiliate&utm_campaign=homepage_partner'}
+  }catch{return 'https://smoothcut.studio/r/whattech?utm_source=askwhattech&utm_medium=affiliate&utm_campaign=homepage_partner'}
 }
 
 export const smoothCutAffiliateUrl=buildAffiliateUrl()

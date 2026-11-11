@@ -1,6 +1,7 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { ThemeToggle } from './ThemeToggle'
 
 export function Layout() {
   const [open,setOpen]=useState(false)
@@ -22,6 +23,7 @@ export function Layout() {
           <NavLink to="/forum" onClick={closeMenu}>Forum</NavLink>
           <NavLink to="/about" onClick={closeMenu}>About</NavLink>
         </nav>
+        <ThemeToggle/>
         <button type="button" className="navToggle" aria-label={open?'Close menu':'Open menu'} aria-expanded={open} onClick={()=>setOpen(value=>!value)}>{open?<X/>:<Menu/>}</button>
       </div>
     </header>
